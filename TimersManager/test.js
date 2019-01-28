@@ -37,8 +37,6 @@ class TimersManager {
     */
     this.methods.push('add');
   
-    console.log(this.names);
-    console.log(timer.name);
     try {
 
       if (timer.delay > 5000) throw 'Error: Delay should not exceed 5 seconds';
@@ -47,15 +45,16 @@ class TimersManager {
       if (this.methods.includes('start')) throw 'Error: you can\'t call the add method after the start method was called.'
 
       if (this.names.includes(timer.name)) {
-        throw new Error('Error: Timer has been already added'); 
+        throw 'Error: Timer has been already added'; 
       } else {
         this.names.push(timer.name);
       }
       this.timers.push({ timer, args });
       return this;
     } catch (e) {
-      return console.error(e);
+      console.error(e);
     }
+
 
   }
 
@@ -136,7 +135,7 @@ const manager = new TimersManager();
 
 
 manager.add(t1).add(t2, 1, 5);
-manager.add(t1);
+// manager.add(t1);
 manager.start();
 // manager.remove('t2');
 manager.stop('t1');
