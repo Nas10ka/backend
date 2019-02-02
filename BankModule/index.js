@@ -3,6 +3,7 @@
   нового контрагента. Метод возвращает идентификатор 
   контрагента (генеринуется автоматически модуле Bank).
 */
+const uuid = require('uuid/v1');
 const EventEmitter = require('events');
 
 class Bank {
@@ -11,9 +12,17 @@ class Bank {
   }
   
   register(person) {
-    this.persons.push(person);
+    console.log('_register person: ', person);
+    const id = uuid();
+    const customer = {
+      id,
+      ...person
+    };
+    this.persons.push(customer);
     
-    return this;
+    console.log('_register person: ', customer);
+    
+    return id;
   }
 
   add (personId, sum) {
