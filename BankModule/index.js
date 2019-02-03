@@ -145,24 +145,33 @@ class Bank {
   }
 
   changeLimit(id, callback) {
-    console.log()
+    this.registers[id].limit = callback; 
+    consoe.log(this.registers[id]);
+
   }
  
-  _isTransSumValid(bal, sum) {
-    if(sum > bal + 1) {
-      this.error = "The money is not enough."
-      return false;
+  _isTransSumValid(bal, sum, lim) {
+    switch(true) {
+      case !lim(sum): {
+        this.error = "The transfer limit exceeded."
+        return false;
+      }
+      case (sum > bal + 1): {
+        this.error = "The money is not enought."
+        return false;
+      } 
+      case (0 >= sum): {
+        this.error = "The sum for transaction must be greater than zero"
+        return false;
+      }
+      default:
+        return true;
     }
-    if(0 >= sum) {
-      this.error = "The sum for transaction must be greater than zero"
-      return false;
-    }
-    return true;
   }
 
   send(from, to, sum) {
-    const balanceFrom = this.registers[from].balance;
-    if(!this._isTransSumValid(balanceFrom, sum)) {
+    const { balance:balanceFrom, limit } = this.registers[from];
+    if(!this._isTransSumValid(balanceFrom, sum, limit)) {
       this.on('error', this.error);
     }
     const balanceTo = this.registers[to].balance;
@@ -177,7 +186,7 @@ const bank = new Bank();
 const personId1 = bank.register({
   name: 'Pitter Blank', // String - имя контрагента
   balance: 100, // Number - начальный баланс 
-  limit: amount => amount < 10
+  limit: amount => amount < 100
 });
 
 const personId2 = bank.register({
@@ -207,3 +216,18 @@ bank.emit('get', personId2, balance => {
   console.log(`I have ${balance}₴`);
 });
 
+bank.emit('changeLimit', personId1, 
+  (amount, currentBalance, updateBalance) => 
+    amount < 100 && updateBalance > 700 && currentBalance > 800);
+
+bank.emit('changeLimit', personId1, 
+  (amount, currentBalance, updateBalance) => 
+    amount < 100 && updateBalance > 700);
+
+bank.emit('changeLimit', personId1, 
+  (amount, currentBalance) => 
+    currentBalance > 800);
+
+bank.emit('changeLimit', personId1, 
+  (amount, currentBalance, updateBalance) => 
+    updateBalance > 900);
