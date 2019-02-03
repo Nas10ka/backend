@@ -32,14 +32,25 @@
       контрагента. 
 
     4. Событие withdraw должно генерировать ошибку при попытке
-      списать отрицательную сумму
+      списать отрицательную сумму co счёта контрагента.
+    
+    5. Событие withdraw должно генерировать ошибку при попытке 
+      списать сумму со счёта контрагента если после списания счёт 
+      контрагента будет меньше нуля.
+
+    6. Все события должны генерировать ошибку если им передан 
+      не существующий идентификатор контрагента.
+    
+    7. Генерирование и обработку ошибок необходимо реализовать
+      при помощи события error. 
 
 */
 const uuid = require('uuid/v1');
-const EventEmitter = require('events');
 
 class Bank {
   constructor() {
+    this.registers = {};
+    this.ids = [];
     this.persons = [];
     this.error = '';
   }
@@ -67,40 +78,35 @@ class Bank {
 
   register(person) {
       if (!this._registerIsValid(person)) 
-        return this.on('Error', this.error);
+        return this.on('error', this.error);
 
       const id = uuid();
       const customer = {
         id,
         ...person
       };
-      this.persons.push(customer);
+      this.registers[id] = customer;
+      this.ids.push(id);
       return id;
   }
 
   add (id, sum) {
     if (!this._sumIsValid(sum)) 
-      return this.on('Error', this.error);
+      return this.on('error', this.error);
 
-    this.persons = this.persons.map(person => 
-      person.id === id ? 
-      {...person, balance: person.balance + sum } : 
-      person);
-    return this;
+    const { balance } = this.registers[id];
+    return this.registers[id].balance = balance + sum;
+    
   }
 
   get (id, callback){
-    this.persons.map(person => 
-      person.id === id ? 
-      callback(person.balance) :
-      person
-    );
-    return this;
+    const { balance } = this.registers[id];
+    return callback(balance);
   }
 
   _isEnoughMoney(id, sum) {
-    const person = this.persons.filter(p => p.id === id);
-    if(person.balance + 1 < sum) {
+    const { balance } = this.registers[id];
+    if(balance + 1 < sum) {
       this.error = 'The sum for withdrow is greater than current balance.'
       return false;
     }
@@ -109,39 +115,63 @@ class Bank {
 
   withdraw (id, sum) {
     if (!this._sumIsValid(sum)) 
-      return this.on('Error', this.error);
+      return this.on('error', this.error);
 
-    this.persons = this.persons.map(person => 
-      person.id === id ? 
-      { ...person, balance: person.balance - sum } :
-      person
-    );
-    return this;
+    const { balance } = this.registers[id];
+    return this.registers[id].balance = balance - sum;
+  }
+
+  _isIdExists (id) {
+   if(!this.ids.includes(id)) {
+      this.error = 'The contragent doesn\'t exists.'
+   }
+  }
+
+  error(msg) {
+    throw new Error(msg);
   }
 
   emit(method, ...data) {
-    this[method](...data);
+    this.on(method, data);
     return this
   }
 
-  on (method, msg) {
-    throw Error(msg);
+  on (method, data) {
     try {
-
+      this[method](...data);
     } catch(msg) {
       console.error(msg);
     }
   }
 
-  changeLimit(personId, callback) {
+  changeLimit(id, callback) {
     console.log()
-    // const { name, balance } = 
+  }
+ 
+  _isTransSumValid(bal, sum) {
+    if(sum > bal + 1) {
+      this.error = "The money is not enough."
+      return false;
+    }
+    if(0 >= sum) {
+      this.error = "The sum for transaction must be greater than zero"
+      return false;
+    }
+    return true;
   }
 
-  send(personFrom, personTo) {
-    // this.on('Error', 'The sum for trunsaction must be greater then zero');
+  send(from, to, sum) {
+    const balanceFrom = this.registers[from].balance;
+    if(!this._isTransSumValid(balanceFrom, sum)) {
+      this.on('error', this.error);
+    }
+    const balanceTo = this.registers[to].balance;
+    this.registers[from].balance = balanceFrom - sum; 
+    this.registers[to].balance = balanceTo + sum; 
+    return this.registers;
   }
 };
+
 const bank = new Bank();
 
 const personId1 = bank.register({
@@ -159,13 +189,21 @@ const personId2 = bank.register({
 bank.emit('add', personId1, 20);
 bank.emit('add', personId2, 70);
 
-bank.emit('get', personId1, balance => {
-  console.log(`I have ${balance}₴`);
-});
 bank.emit('withdraw', personId1, 50);
 bank.emit('get', personId1, balance => {
   console.log(`I have ${balance}₴`);
 });
 
-bank.emit('send', personId1, personId2);
+bank.emit('get', personId2, balance => {
+  console.log(`I have ${balance}₴`);
+});
+bank.emit('send', personId1, personId2, 20);
+
+bank.emit('get', personId1, balance => {
+  console.log(`I have ${balance}₴`);
+});
+
+bank.emit('get', personId2, balance => {
+  console.log(`I have ${balance}₴`);
+});
 
