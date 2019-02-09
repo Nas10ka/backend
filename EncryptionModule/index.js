@@ -4,7 +4,7 @@
  * имплементировать Readable интерфейс и будет 
  * служить поставщиком данных.
  */
-const { Readable } = require('stream');
+const { Readable, Transform, Writable } = require('stream');
 
 class Ui extends Readable {
     constructor(data, options) {
@@ -16,7 +16,7 @@ class Ui extends Readable {
 
     init() {
         this.on('data', chunk => {
-            console.log(chunk);
+            // console.log(chunk);
         })
     }
 
@@ -30,17 +30,83 @@ class Ui extends Readable {
     }
 }
 
-class Guardian {
-    constructor() {
 
+const t_options = {
+    readableObjectMode: true,
+    writableObjectMode: true,
+    decodeStrings: false
+};
+
+const w_options = {
+    objectMode: true
+};
+
+class Guardian extends Transform{
+    constructor(options = {}) {
+        super(options);
+        this.transformedData = {};
+        const {
+            objectMode,
+            highWaterMark,
+            decodeStrings
+        } = this._writableState;
+        
+        this.init();
+    }
+
+    init () {
+        
+    }
+
+    asciiToHexa (str) {
+        const strLength = str.length;
+        let arr = [];
+        for(let n = 0; n < strLength; n++) {
+            const hex = Number(str.charCodeAt(n)).toString(16);
+            arr.push(hex);
+        }
+        return arr.join('');
+    }
+
+    _transform (chunk, encoding, done) {
+        const { name, email, password } = chunk;
+        const data = {
+            meta: {
+                source: 'ui'
+            },
+            payload: {
+                name,
+                email: this.asciiToHexa(email),
+                password: this.asciiToHexa(password)
+            }
+        }
+        this.push(data);
+        done();
+    }
+
+    _flush (done) {
+        done();
     }
 }
 
-class AccountManager {
-    constructor() {
+class AccountManager extends Writable {
+    constructor(props) {
+        super(props);
+        
+        const {
+            objectMode,
+            highWaterMark,
+            decodeStrings,
+            getBuffer
+        } = this._writableState;
+    }
 
+    _write (chunk, encoding, done) {
+        console.log(chunk.payload);
+        done();
     }
 }
+
 const customers = [
     {
         name: 'Pitter Black',
@@ -53,12 +119,14 @@ const customers = [
         password: 'owhite_456'
     }
 ];
+
 const options = {
     objectMode: true,
     highWaterMark: 1
 };
-const ui = new Ui(customers, options);
-const guardian = new Guardian();
-const manager = new AccountManager();
 
-// ui.pipe(guardian).pipe(manager);
+const ui = new Ui(customers, options);
+const guardian = new Guardian(t_options);
+const manager = new AccountManager(w_options);
+
+ui.pipe(guardian).pipe(manager);
