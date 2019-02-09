@@ -1,23 +1,58 @@
 'use strict';
 /**
- * Реализовать класс Ui который будет
+ * 1. Реализовать класс Ui который будет
  * имплементировать Readable интерфейс и будет 
  * служить поставщиком данных.
+ * 
+ * 2. Реализовать класс Guardian который будет имплементировать
+ * Transform интерфейс и будет служить для шифрования данных. 
+ * Для шифрования пароля будем использовать преобразования строки в hex
+ * формат. Зашифровать необходимо email и password.
+ * 
+ * 3. Когда AccountManager получает объект он должен вывести
+ * в консоль payload.
+ * 
+ * 4. Реализовать Logger который будет реализовать интерфейс Transform stream.
+ * 
+ * 5. Реализовать DB который будет экземпляром EventEmitter.
+ * 
+ * 6. Встроить Logger в цепочку между Guardian и AccountManager.
+ * 
+ * 7. При получении данных Logger должен вызывать событие у DB в результате 
+ * чего база будет сохранять у себя информацию о передаваемых данных.
+ * 
  */
 const { Readable, Transform, Writable } = require('stream');
+const { EventEmitter } = require('events');
+
+class DB extends EventEmitter {
+    constructor(props) {
+        super(props);
+        this.database = [];
+    }
+
+    store (data) {
+
+        this.database.push(data);
+        console.log(this.database);
+        return data;
+    }
+
+    emit(method, data) {
+        this.on(method, data);
+        return data;
+    }
+
+    on (method, data) {
+
+        this[method](data);
+    }
+}
 
 class Ui extends Readable {
     constructor(data, options) {
         super(options);
         this.data = data;
-
-        this.init();
-    }
-
-    init() {
-        this.on('data', chunk => {
-            // console.log(chunk);
-        })
     }
 
     _read() {
@@ -30,16 +65,42 @@ class Ui extends Readable {
     }
 }
 
+class Logger extends Transform {
+    constructor(props) {
+        super(props);
+        this.logs = [];
+        this.data = [];
+        this.db = new DB();
+        console.log('Logger db ', this.data);
+        
+        const {
+            objectMode,
+            highWaterMark,
+            decodeStrings,
+            getBuffer
+        } = this._writableState;
 
-const t_options = {
-    readableObjectMode: true,
-    writableObjectMode: true,
-    decodeStrings: false
-};
+    }
 
-const w_options = {
-    objectMode: true
-};
+    createLogger(data) {
+        const db = new DB();
+
+        const { meta, payload } = data;
+        const log = {
+            source: meta.source,
+            payload,
+            created: new Date()
+        };
+        this.data = this.db.emit('store', log);
+        this.logs.push(log);
+    }
+
+    _transform (chunk, encoding, done) {
+        this.createLogger(chunk);
+        this.push(chunk);
+        done();
+    }
+}
 
 class Guardian extends Transform{
     constructor(options = {}) {
@@ -50,11 +111,6 @@ class Guardian extends Transform{
             highWaterMark,
             decodeStrings
         } = this._writableState;
-        
-        this.init();
-    }
-
-    init () {
         
     }
 
@@ -120,6 +176,16 @@ const customers = [
     }
 ];
 
+const t_options = {
+    readableObjectMode: true,
+    writableObjectMode: true,
+    decodeStrings: false
+};
+
+const w_options = {
+    objectMode: true
+};
+
 const options = {
     objectMode: true,
     highWaterMark: 1
@@ -128,5 +194,6 @@ const options = {
 const ui = new Ui(customers, options);
 const guardian = new Guardian(t_options);
 const manager = new AccountManager(w_options);
+const logger = new Logger(t_options);
 
-ui.pipe(guardian).pipe(manager);
+ui.pipe(guardian).pipe(logger).pipe(manager);
