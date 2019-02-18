@@ -1,0 +1,159 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/home/anastasiia/.nvm/versions/node/v6.9.2/bin/node',
+1 verbose cli   '/home/anastasiia/.nvm/versions/node/v6.9.2/bin/npm',
+1 verbose cli   'i',
+1 verbose cli   '-g',
+1 verbose cli   'jest' ]
+2 info using npm@3.10.9
+3 info using node@v6.9.2
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readGlobalPackageData
+7 silly fetchPackageMetaData jest
+8 silly fetchNamedPackageData jest
+9 silly mapToRegistry name jest
+10 silly mapToRegistry using default registry
+11 silly mapToRegistry registry https://registry.npmjs.org/
+12 silly mapToRegistry data Result {
+12 silly mapToRegistry   raw: 'jest',
+12 silly mapToRegistry   scope: null,
+12 silly mapToRegistry   escapedName: 'jest',
+12 silly mapToRegistry   name: 'jest',
+12 silly mapToRegistry   rawSpec: '',
+12 silly mapToRegistry   spec: 'latest',
+12 silly mapToRegistry   type: 'tag' }
+13 silly mapToRegistry uri https://registry.npmjs.org/jest
+14 verbose request uri https://registry.npmjs.org/jest
+15 verbose request no auth needed
+16 info attempt registry request try #1 at 8:48:48 AM
+17 verbose request id a686bdc929aba273
+18 verbose etag W/"d630f54916ee10ce9cbbd63fae73bcde"
+19 verbose lastModified Fri, 26 Oct 2018 16:36:17 GMT
+20 http request GET https://registry.npmjs.org/jest
+21 info retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org registry.npmjs.org:443
+22 info attempt registry request try #2 at 8:49:18 AM
+23 verbose etag W/"d630f54916ee10ce9cbbd63fae73bcde"
+24 verbose lastModified Fri, 26 Oct 2018 16:36:17 GMT
+25 http request GET https://registry.npmjs.org/jest
+26 info retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org registry.npmjs.org:443
+27 info attempt registry request try #3 at 8:50:38 AM
+28 verbose etag W/"d630f54916ee10ce9cbbd63fae73bcde"
+29 verbose lastModified Fri, 26 Oct 2018 16:36:17 GMT
+30 http request GET https://registry.npmjs.org/jest
+31 silly get cb [ 304, undefined ]
+32 verbose etag https://registry.npmjs.org/jest from cache
+33 verbose get saving jest to /home/anastasiia/.npm/registry.npmjs.org/jest/.cache.json
+34 verbose correctMkdir /home/anastasiia/.npm correctMkdir not in flight; initializing
+35 silly install normalizeTree
+36 silly loadCurrentTree Finishing
+37 silly loadIdealTree Starting
+38 silly install loadIdealTree
+39 silly cloneCurrentTree Starting
+40 silly install cloneCurrentTreeToIdealTree
+41 silly cloneCurrentTree Finishing
+42 silly loadShrinkwrap Starting
+43 silly install loadShrinkwrap
+44 silly loadShrinkwrap Finishing
+45 silly loadAllDepsIntoIdealTree Starting
+46 silly install loadAllDepsIntoIdealTree
+47 silly resolveWithNewModule jest@23.6.0 checking installable status
+48 silly cache add args [ 'jest', null ]
+49 verbose cache add spec jest
+50 silly cache add parsed spec Result {
+50 silly cache add   raw: 'jest',
+50 silly cache add   scope: null,
+50 silly cache add   escapedName: 'jest',
+50 silly cache add   name: 'jest',
+50 silly cache add   rawSpec: '',
+50 silly cache add   spec: 'latest',
+50 silly cache add   type: 'tag' }
+51 silly addNamed jest@latest
+52 verbose addNamed "latest" is being treated as a dist-tag for jest
+53 info addNameTag [ 'jest', 'latest' ]
+54 silly mapToRegistry name jest
+55 silly mapToRegistry using default registry
+56 silly mapToRegistry registry https://registry.npmjs.org/
+57 silly mapToRegistry data Result {
+57 silly mapToRegistry   raw: 'jest',
+57 silly mapToRegistry   scope: null,
+57 silly mapToRegistry   escapedName: 'jest',
+57 silly mapToRegistry   name: 'jest',
+57 silly mapToRegistry   rawSpec: '',
+57 silly mapToRegistry   spec: 'latest',
+57 silly mapToRegistry   type: 'tag' }
+58 silly mapToRegistry uri https://registry.npmjs.org/jest
+59 verbose addNameTag registry:https://registry.npmjs.org/jest not in flight; fetching
+60 verbose get https://registry.npmjs.org/jest not expired, no request
+61 silly addNameTag next cb for jest with tag latest
+62 silly addNamed jest@23.6.0
+63 verbose addNamed "23.6.0" is a plain semver version for jest
+64 silly mapToRegistry name jest
+65 silly mapToRegistry using default registry
+66 silly mapToRegistry registry https://registry.npmjs.org/
+67 silly mapToRegistry data Result {
+67 silly mapToRegistry   raw: 'jest',
+67 silly mapToRegistry   scope: null,
+67 silly mapToRegistry   escapedName: 'jest',
+67 silly mapToRegistry   name: 'jest',
+67 silly mapToRegistry   rawSpec: '',
+67 silly mapToRegistry   spec: 'latest',
+67 silly mapToRegistry   type: 'tag' }
+68 silly mapToRegistry uri https://registry.npmjs.org/jest
+69 verbose addRemoteTarball https://registry.npmjs.org/jest/-/jest-23.6.0.tgz not in flight; adding
+70 verbose addRemoteTarball [ 'https://registry.npmjs.org/jest/-/jest-23.6.0.tgz',
+70 verbose addRemoteTarball   'ad5835e923ebf6e19e7a1d7529a432edfee7813d' ]
+71 info retry fetch attempt 1 at 8:50:58 AM
+72 info attempt registry request try #1 at 8:50:58 AM
+73 http fetch GET https://registry.npmjs.org/jest/-/jest-23.6.0.tgz
+74 info retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org registry.npmjs.org:443
+75 info attempt registry request try #2 at 8:51:28 AM
+76 http fetch GET https://registry.npmjs.org/jest/-/jest-23.6.0.tgz
+77 info retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org registry.npmjs.org:443
+78 info attempt registry request try #3 at 8:52:48 AM
+79 http fetch GET https://registry.npmjs.org/jest/-/jest-23.6.0.tgz
+80 error fetch failed https://registry.npmjs.org/jest/-/jest-23.6.0.tgz
+81 warn retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org registry.npmjs.org:443
+82 info retry fetch attempt 2 at 8:53:18 AM
+83 info attempt registry request try #1 at 8:53:18 AM
+84 http fetch GET https://registry.npmjs.org/jest/-/jest-23.6.0.tgz
+85 info retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org registry.npmjs.org:443
+86 info attempt registry request try #2 at 8:53:48 AM
+87 http fetch GET https://registry.npmjs.org/jest/-/jest-23.6.0.tgz
+88 info retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org registry.npmjs.org:443
+89 info attempt registry request try #3 at 8:55:08 AM
+90 http fetch GET https://registry.npmjs.org/jest/-/jest-23.6.0.tgz
+91 error fetch failed https://registry.npmjs.org/jest/-/jest-23.6.0.tgz
+92 warn retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org registry.npmjs.org:443
+93 info retry fetch attempt 3 at 8:56:28 AM
+94 info attempt registry request try #1 at 8:56:28 AM
+95 http fetch GET https://registry.npmjs.org/jest/-/jest-23.6.0.tgz
+96 info retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org registry.npmjs.org:443
+97 info attempt registry request try #2 at 8:56:58 AM
+98 http fetch GET https://registry.npmjs.org/jest/-/jest-23.6.0.tgz
+99 info retry will retry, error on last attempt: Error: getaddrinfo ENOTFOUND registry.npmjs.org registry.npmjs.org:443
+100 info attempt registry request try #3 at 8:58:18 AM
+101 http fetch GET https://registry.npmjs.org/jest/-/jest-23.6.0.tgz
+102 error fetch failed https://registry.npmjs.org/jest/-/jest-23.6.0.tgz
+103 silly rollbackFailedOptional Starting
+104 silly rollbackFailedOptional Finishing
+105 silly runTopLevelLifecycles Finishing
+106 silly install printInstalled
+107 verbose stack Error: getaddrinfo ENOTFOUND registry.npmjs.org registry.npmjs.org:443
+107 verbose stack     at errnoException (dns.js:28:10)
+107 verbose stack     at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:76:26)
+108 verbose cwd /home/anastasiia/Backend/backend/8_Tests/tasks
+109 error Linux 4.15.0-45-generic
+110 error argv "/home/anastasiia/.nvm/versions/node/v6.9.2/bin/node" "/home/anastasiia/.nvm/versions/node/v6.9.2/bin/npm" "i" "-g" "jest"
+111 error node v6.9.2
+112 error npm  v3.10.9
+113 error code ENOTFOUND
+114 error errno ENOTFOUND
+115 error syscall getaddrinfo
+116 error network getaddrinfo ENOTFOUND registry.npmjs.org registry.npmjs.org:443
+117 error network This is most likely not a problem with npm itself
+117 error network and is related to network connectivity.
+117 error network In most cases you are behind a proxy or have bad network settings.
+117 error network
+117 error network If you are behind a proxy, please make sure that the
+117 error network 'proxy' config is set properly.  See: 'npm help config'
+118 verbose exit [ 1, true ]
